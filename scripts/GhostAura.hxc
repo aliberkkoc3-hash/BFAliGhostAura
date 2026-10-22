@@ -1,0 +1,262 @@
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import funkin.play.PlayState;
+import flixel.FlxSprite;
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import funkin.data.character.CharacterDataParser;
+import openfl.display.BlendMode;
+
+class GhostAura extends Module
+{
+	public var dadGhosts:Array<Dynamic> = [];
+	public var bfGhosts:Array<Dynamic> = [];
+	public var gfGhosts:Array<Dynamic> = [];
+
+	public var trailLength:Int = 8;
+
+	var isMobile:Bool = false;
+	var detected:Bool = false;
+	var cfg:Dynamic = null;
+
+	function new()
+	{
+		super("DoubleGhostNote");
+	}
+
+	function loadConfig():Void
+	{
+		if (detected) return;
+		detected = true;
+
+		try { if (FlxG.onMobile == true) isMobile = true; } catch(e:Dynamic) {}
+
+		var configName = isMobile ? "MobileConfig" : "DesktopConfig";
+		var configModule = ModuleHandler.getModule(configName);
+
+		if (configModule != null)
+		{
+			try cfg = configModule.scriptCall("getConfig") catch(e:Dynamic) cfg = null;
+		}
+
+		if (cfg == null)
+		{
+			cfg = {
+				trailLength: isMobile ? 4 : 8,
+				startAlpha: isMobile ? 0.65 : 0.72,
+				fadeDuration: isMobile ? 0.55 : 0.95,
+				pulsePeak: isMobile ? 1.15 : 1.25,
+				pulseRest: isMobile ? 1.02 : 1.06,
+				pulseIn: isMobile ? 0.15 : 0.12,
+				pulseOut: isMobile ? 0.4 : 0.55,
+				floatEnabled: !isMobile,
+				floatBase: -22.0,
+				floatStep: 4.0,
+				floatDuration: 0.85,
+				tiltEnabled: !isMobile,
+				tiltLeft: -7.0,
+				tiltDown: 4.0,
+				tiltUp: -4.0,
+				tiltRight: 7.0,
+				tiltDuration: 0.55,
+				oldFadeEnabled: !isMobile,
+				oldFadeStep: 0.30,
+				oldMinAlpha: 0.04,
+				useRenderTexture: !isMobile,
+				useBlendAdd: true
+			};
+		}
+
+		trailLength = cfg.trailLength;
+		trace("[AuraGhost] " + (isMobile ? "MOBILE" : "DESKTOP") + " | Trail: " + trailLength);
+	}
+
+	override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
+		loadConfig();
+		clearGhosts(bfGhosts);
+	}
+
+	function onNoteHit(event)
+	{
+		if (PlayState.instance == null) return;
+		if (PlayState.instance.isMinimalMode) return;
+		if (event == null || event.note == null || PlayState.instance.currentStage == null) return;
+
+		var noteDir:Int = 0;
+		try noteDir = event.note.noteData.getDirection() catch (e:Dynamic) noteDir = event.note.direction % 4;
+
+		if (event.note.noteData.getMustHitNote())
+		{
+			if (PlayState.instance.currentStage.getBoyfriend() != null)
+				createTrailFrame("bf", PlayState.instance.currentStage.getBoyfriend(), noteDir);
+		}
+	}
+
+	function clearGhosts(list:Array<Dynamic>):Void
+	{
+		while (list.length > 0) removeGhost(list.pop());
+	}
+
+	function removeGhost(ghost:Dynamic):Void
+	{
+		if (ghost == null) return;
+		try if (PlayState.instance.currentStage != null) PlayState.instance.currentStage.remove(ghost, true) catch (e:Dynamic) {}
+		try ghost.destroy() catch (e:Dynamic) {}
+	}
+
+	function removeFromList(list:Array<Dynamic>, ghost:Dynamic):Void
+	{
+		var i = list.indexOf(ghost);
+		if (i >= 0) list.splice(i, 1);
+	}
+
+	function getGhostList(char:String):Array<Dynamic>
+	{
+		return bfGhosts;
+	}
+
+	function getNoteColor(noteDir:Int):Int
+	{
+		return switch(noteDir)
+		{
+			case 0: 0xFF8B5CF6;
+			case 1: 0xFF06D6A0;
+			case 2: 0xFFFBBF24;
+			case 3: 0xFFF472B6;
+			default: 0xFF00C5FF;
+		};
+	}
+
+	function getTrailColor(char:String, noteDir:Int, index:Int, total:Int):Int
+	{
+		var base = getNoteColor(noteDir);
+		var r = (base >> 16) & 0xFF;
+		var g = (base >> 8) & 0xFF;
+		var b = base & 0xFF;
+		var t = total > 1 ? index / (total - 1) : 0;
+		t = t * t;
+		var fr = Std.int(r + (0xFF - r) * t);
+		var fg = Std.int(g + (0xF0 - g) * t);
+		var fb = Std.int(b + (0xFF - b) * t);
+		return (0xFF << 24) | (fr << 16) | (fg << 8) | fb;
+	}
+
+	function createTrailFrame(char:String, player:Dynamic, noteDir:Int):Void
+	{
+		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+		if (player == null) return;
+
+		if (cfg == null) loadConfig();
+
+		var list = getGhostList(char);
+		if (list.length >= trailLength) removeGhost(list.shift());
+
+		var renderType:String = "";
+		try renderType = Std.string(player._data.renderType).toLowerCase() catch(e:Dynamic) {}
+		var isAtlas = renderType == "animateatlas" || renderType == "multianimateatlas";
+
+		var ghost:Dynamic = isAtlas ? CharacterDataParser.fetchCharacter(player.characterId, true) : new FlxSprite();
+
+		if (cfg.useRenderTexture)
+			try ghost.useRenderTexture = true catch(e:Dynamic) {}
+
+		PlayState.instance.currentStage.add(ghost);
+
+		ghost.x = player.x;
+		ghost.y = player.y;
+		ghost.flipX = player.flipX;
+		ghost.flipY = player.flipY;
+		ghost.alpha = cfg.startAlpha;
+		ghost.color = getTrailColor(char, noteDir, list.length, trailLength);
+		ghost.blend = cfg.useBlendAdd ? BlendMode.ADD : BlendMode.NORMAL;
+		ghost.zIndex = player.zIndex - 1;
+		ghost.scale.set(player.scale.x, player.scale.y);
+
+		if (!isAtlas)
+		{
+			ghost.frames = player.frames;
+			ghost.animation.copyFrom(player.animation);
+			switch(noteDir)
+			{
+				case 0: ghost.animation.play("singLEFT", true);
+				case 1: ghost.animation.play("singDOWN", true);
+				case 2: ghost.animation.play("singUP", true);
+				case 3: ghost.animation.play("singRIGHT", true);
+				default: ghost.animation.play("idle", true);
+			}
+			ghost.offset.set(player.offset.x, player.offset.y);
+			ghost.origin.set(player.origin.x, player.origin.y);
+		}
+		else
+		{
+			try ghost.playSingAnimation(noteDir, false) catch(e:Dynamic) {}
+		}
+
+		PlayState.instance.currentStage.refresh();
+		list.push(ghost);
+
+		applyEffects(ghost, list, noteDir);
+	}
+
+	function applyEffects(ghost:Dynamic, list:Array<Dynamic>, noteDir:Int):Void
+	{
+		var sx = ghost.scale.x;
+		var sy = ghost.scale.y;
+
+		FlxTween.tween(ghost.scale, {x: sx * cfg.pulsePeak, y: sy * cfg.pulsePeak}, cfg.pulseIn, {
+			ease: FlxEase.cubeOut,
+			onComplete: function(_)
+			{
+				FlxTween.tween(ghost.scale, {x: sx * cfg.pulseRest, y: sy * cfg.pulseRest}, cfg.pulseOut, {
+					ease: FlxEase.quadOut
+				});
+			}
+		});
+
+		if (cfg.floatEnabled)
+		{
+			var floatY:Float = cfg.floatBase - (list.length * cfg.floatStep);
+			FlxTween.tween(ghost, {y: ghost.y + floatY}, cfg.floatDuration, {
+				ease: FlxEase.quadOut
+			});
+		}
+
+		if (cfg.tiltEnabled)
+		{
+			var tilt:Float = switch(noteDir)
+			{
+				case 0: cfg.tiltLeft;
+				case 1: cfg.tiltDown;
+				case 2: cfg.tiltUp;
+				case 3: cfg.tiltRight;
+				default: 0;
+			};
+			FlxTween.tween(ghost, {angle: tilt}, cfg.tiltDuration, {
+				ease: FlxEase.quadOut
+			});
+		}
+
+		if (cfg.oldFadeEnabled && list.length > 1)
+		{
+			var div = trailLength > 1 ? trailLength - 1 : 1;
+			var step:Float = cfg.oldFadeStep / div;
+			for (i in 0...(list.length - 1))
+			{
+				var g = list[i];
+				if (g.alpha > cfg.oldMinAlpha) g.alpha -= step;
+			}
+		}
+
+		FlxTween.tween(ghost, {alpha: 0}, cfg.fadeDuration, {
+			ease: FlxEase.quadIn,
+			onComplete: function(twn:FlxTween)
+			{
+				removeFromList(list, ghost);
+				removeGhost(ghost);
+			}
+		});
+	}
+}

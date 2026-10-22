@@ -1,0 +1,17 @@
+{
+  "title": "BFAliGhostTrail",
+  "description": "Friday Night Funkin' V-Slice 0.8.6 için geliştirilmiş bir hayalet izi görsel efekt modudur. Karakterler başarılı nota vuruşları gerçekleştirdiğinde camgöbeği renkli hayalet izleri oluşturur.",
+  "contributors": [
+    {
+      "name": "BF_AliBerk_BF",
+      "role": "Geliştirici ve Mobil Uyarlama Sorumlusu"
+    },
+    {
+      "name": "Prism Crew Studio",
+      "role": "Geliştirme Desteği ve Lisans Sahibi"
+    }
+  ],
+  "api_version": "0.8.6",
+  "mod_version": "0.0.2",
+  "license": "MIT"
+}

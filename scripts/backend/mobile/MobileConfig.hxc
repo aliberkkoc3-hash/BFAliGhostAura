@@ -1,0 +1,37 @@
+import funkin.modding.module.Module;
+
+class MobileConfig extends Module
+{
+	function new()
+	{
+		super("MobileConfig");
+	}
+
+	public function getConfig():Dynamic
+	{
+		return {
+			trailLength: 4,
+			startAlpha: 0.65,
+			fadeDuration: 0.55,
+			pulsePeak: 1.15,
+			pulseRest: 1.02,
+			pulseIn: 0.15,
+			pulseOut: 0.4,
+			floatEnabled: false,
+			floatBase: 0.0,
+			floatStep: 0.0,
+			floatDuration: 0.0,
+			tiltEnabled: false,
+			tiltLeft: 0.0,
+			tiltDown: 0.0,
+			tiltUp: 0.0,
+			tiltRight: 0.0,
+			tiltDuration: 0.0,
+			oldFadeEnabled: false,
+			oldFadeStep: 0.0,
+			oldMinAlpha: 0.0,
+			useRenderTexture: false,
+			useBlendAdd: true
+		};
+	}
+}

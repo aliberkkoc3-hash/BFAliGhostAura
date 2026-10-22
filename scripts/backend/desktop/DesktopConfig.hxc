@@ -1,0 +1,37 @@
+import funkin.modding.module.Module;
+
+class DesktopConfig extends Module
+{
+	function new()
+	{
+		super("DesktopConfig");
+	}
+
+	public function getConfig():Dynamic
+	{
+		return {
+			trailLength: 8,
+			startAlpha: 0.72,
+			fadeDuration: 0.95,
+			pulsePeak: 1.25,
+			pulseRest: 1.06,
+			pulseIn: 0.12,
+			pulseOut: 0.55,
+			floatEnabled: true,
+			floatBase: -22.0,
+			floatStep: 4.0,
+			floatDuration: 0.85,
+			tiltEnabled: true,
+			tiltLeft: -7.0,
+			tiltDown: 4.0,
+			tiltUp: -4.0,
+			tiltRight: 7.0,
+			tiltDuration: 0.55,
+			oldFadeEnabled: true,
+			oldFadeStep: 0.30,
+			oldMinAlpha: 0.04,
+			useRenderTexture: true,
+			useBlendAdd: true
+		};
+	}
+}
