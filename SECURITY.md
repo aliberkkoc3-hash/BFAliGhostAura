@@ -1,41 +1,43 @@
-# Güvenlik Politikası
+# Prism Crew Studio — Security Policy
 
-## 🛡️ BFAliGhostAura
+**Version:** 1.0  
+**Effective Date:** October 24, 2026  
+**Copyright:** © 2026 Prism Crew Studio. All rights reserved.
 
-BFAliGhostAura projesinin güvenliği ve güvenilirliği bizim için önemlidir. Bu belge, projede tespit edilen güvenlik açıklarının nasıl bildirilmesi gerektiğini açıklar.
+### 1. Our Objective
 
-## 📢 Güvenlik Açığı Bildirimi
+At Prism Crew Studio, we prioritize the security of our projects, source code, and users. This policy outlines how security vulnerabilities discovered in our projects should be reported and addressed.
 
-BFAliGhostAura'da bir güvenlik açığı veya ciddi bir güvenlik sorunu tespit ettiyseniz lütfen şu adımları izleyin:
+### 2. Supported Versions
 
-1. Sorunu yeniden oluşturmak için gereken adımları belirleyin.
-2. Etkilenen dosyaları ve mümkünse ilgili hata mesajlarını belirtin.
-3. Sorunun olası etkisini açıklayın.
-4. Sorunu kamuya açık şekilde paylaşmadan önce proje geliştiricisiyle iletişime geçin.
+Security updates are provided for project versions that we actively maintain and explicitly support. The support status for each project is specified within its respective repository.
 
-**Güvenlik bildirimleri:** Projenin GitHub deposundaki özel güvenlik bildirimi özelliğini kullanın veya depo sahibi tarafından belirtilen iletişim kanalından ulaşın.
+### 3. Reporting Vulnerabilities
 
-Henüz özel bir iletişim kanalı tanımlanmadıysa lütfen var olmayan bir e-posta adresine bildirim göndermeyin. Depo sahibinin profilinde veya proje sayfasında belirtilen güncel iletişim bilgilerini kullanın.
+If you discover a security vulnerability, please:
 
-## 🔍 Desteklenen Sürümler
+- Report it privately to Prism Crew Studio before disclosing it publicly.
+- Identify the affected project and version.
+- Describe the impact of the vulnerability and, if possible, provide steps to reproduce it.
+- Do not include passwords, access keys, or other personal/sensitive information in your report.
 
-Güvenlik güncellemeleri ve düzeltmeler, geliştiricinin bakımını sürdürdüğü sürümler için sağlanabilir.
+For reporting, please use the *Private vulnerability reporting* feature found under the **Security** tab of the relevant GitHub repository. If this feature is unavailable, please use the private communication channel specified by the repository maintainer.
 
-Friday Night Funkin' V-Slice sürümlerindeki API değişiklikleri, modun çalışmasını veya güvenliğini etkileyebilir. Tüm oyun sürümleriyle uyumluluk garanti edilmez.
+### 4. Responsible Disclosure
 
-## ⚠️ Sorumlu Bildirim
+We request that you allow a reasonable amount of time for us to investigate, verify, and remediate any reported vulnerabilities. Vulnerabilities should not be disclosed publicly without prior coordination with Prism Crew Studio.
 
-- Güvenlik açıklarını başkalarının sistemlerine zarar vermek amacıyla kullanmayın.
-- Açığı düzeltmek için geliştiriciye makul bir süre tanıyın.
-- Açıkla ilgili hassas bilgileri, sorun giderilmeden önce kamuya açık şekilde paylaşmayın.
+We do not guarantee that every report will be accepted, resolved within a specific timeframe, or eligible for a reward.
 
-## 👥 Sorumluluk
+### 5. Scope and Limitations
 
-- **Geliştirici:** BF_AliBerk_BF
-- **Geliştirme Desteği:** Prism Crew Studio
+Security research must be conducted only on systems for which you have authorization and in compliance with all applicable laws. Do not access user data, disrupt services, or put others' systems at risk by testing for vulnerabilities.
 
-BFAliGhostAura, topluluk tarafından geliştirilen resmî olmayan bir modifikasyondur. Friday Night Funkin' oyununun resmî geliştiricileriyle bağlantılı değildir.
+### 6. Communication
+
+For security-related notifications, use the security contact method specified in the GitHub repository for the relevant project. Do not assume or guess a contact address that has not been explicitly provided.
 
 ---
 
-*© 2026 Prism Crew Studio. MIT Lisansı koşulları geçerlidir.*
+**Prism Crew Studio**  
+*Beyond the Spectrum*
