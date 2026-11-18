@@ -11,7 +11,7 @@
       "role": "Geliştirme Desteği ve Lisans Sahibi"
     }
   ],
-  "api_version": "0.8.6",
-  "mod_version": "0.0.2",
-  "license": "MIT"
+  "api_version": "0.8.8",
+  "mod_version": "0.0.3",
+  "license": "PCSL"
 }
